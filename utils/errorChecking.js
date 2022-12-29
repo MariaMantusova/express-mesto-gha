@@ -11,6 +11,9 @@ const handleError = (res, err) => {
     case 'CastError': {
       return res.status(400).send('Bad request');
     }
+    case 'ValidationError': {
+      return res.status(400).send('ValidationError');
+    }
     case 'NotFoundError': {
       return res.status(404).send('Not found');
     }
