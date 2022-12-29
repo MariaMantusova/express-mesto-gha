@@ -5,7 +5,7 @@ const getUsers = (req, res) => User.find({})
   .then((users) => res.status(200).send(users))
   .catch((err) => handleError(res, err));
 
-const getUserById = (req, res) => User.findById(req.params._id)
+const getUserById = (req, res) => User.findById(req.user._id)
   .then((user) => {
     checkNotFoundError(!user);
     return res.status(200).send(user);
