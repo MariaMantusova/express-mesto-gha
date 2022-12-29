@@ -8,17 +8,15 @@ const checkNotFoundError = (model) => {
 
 const handleError = (res, err) => {
   switch (err.name) {
-    case 'CastError': {
-      return res.status(400).send('Bad request');
-    }
+    case 'CastError':
     case 'ValidationError': {
-      return res.status(400).send('ValidationError');
+      return res.status(400).send({ message: 'ValidationError' });
     }
     case 'NotFoundError': {
-      return res.status(404).send('Not found');
+      return res.status(404).send({ message: 'NotFoungError' });
     }
     default: {
-      return res.status(500).send(`Произошла ошибка ${err}`);
+      return res.status(500).send({ message: `Произошла ошибка ${err}` });
     }
   }
 };
