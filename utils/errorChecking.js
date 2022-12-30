@@ -13,7 +13,7 @@ const handleError = (res, err) => {
       return res.status(400).send({ message: 'ValidationError' });
     }
     case 'NotFoundError': {
-      return res.status(404).send({ message: 'NotFoungError' });
+      return res.status(404).send({ message: 'NotFoundError' });
     }
     default: {
       return res.status(500).send({ message: `Произошла ошибка ${err}` });
