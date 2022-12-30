@@ -9,7 +9,7 @@ const getUsers = (req, res) => User.find({})
   })
   .catch((err) => handleError(res, err));
 
-const getUserById = (req, res) => User.findById(req.params.userId)
+const getUserById = (req, res) => User.findById(req.params.userId, { runValidators: true })
   .then((user) => {
     checkNotFoundError(user);
     return res.status(200).send(user);
@@ -30,7 +30,7 @@ const createUser = ((req, res) => {
 const changeInfo = (req, res) => {
   const { name, about } = req.body;
 
-  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true })
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       checkNotFoundError(user);
       return res.status(200).send({ data: user });
@@ -41,7 +41,7 @@ const changeInfo = (req, res) => {
 const changeAvatar = (req, res) => {
   const { avatar } = req.body;
 
-  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true })
+  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .then((user) => {
       checkNotFoundError(user);
       return res.status(200).send({ data: user });
