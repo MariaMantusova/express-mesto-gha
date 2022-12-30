@@ -6,7 +6,7 @@ const getCards = (req, res) => Card.find({})
   .catch((err) => handleError(res, err));
 
 const deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.id, { new: true })
+  Card.findByIdAndRemove(req.params.cardId, { new: true })
     .then((card) => {
       checkNotFoundError(card);
       return res.send({ data: card });
