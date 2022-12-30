@@ -9,7 +9,7 @@ const getUsers = (req, res) => User.find({})
   })
   .catch((err) => handleError(res, err));
 
-const getUserById = (req, res) => User.findById(req.user._id, { runValidators: true })
+const getUserById = (req, res) => User.findById(req.users._id, { runValidators: true })
   .then((user) => {
     checkNotFoundError(user);
     return res.status(200).send(user);
