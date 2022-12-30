@@ -3,17 +3,14 @@ const { checkNotFoundError, handleError } = require('../utils/errorChecking');
 
 const getUsers = (req, res) => User.find({})
   .then((users) => {
-    // const defaultUser = new User();
-    // defaultUser._id = req.user._id;
     res.status(200).send(users);
   })
   .catch((err) => handleError(res, err));
 
-const getUserById = (req, res) => User.findById(req.params.userId, { runValidators: true })
-  .populate('user')
+const getUserById = (req, res) => User.findById(req.params.userId)
   .then((user) => {
     checkNotFoundError(user);
-    return res.status(200).send(user);
+    return res.status(200).send({ data: user });
   })
   .catch((err) => handleError(res, err));
 
