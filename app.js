@@ -3,6 +3,7 @@ const rateLimit = require('express-rate-limit');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
+const { login, createUser } = require('./controllers/users');
 
 const app = express();
 
@@ -14,7 +15,7 @@ const limiter = rateLimit({
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3005 } = process.env;
 
 mongoose.set('strictQuery', false);
 mongoose.connect('mongodb://localhost:27017/mesto');
@@ -30,6 +31,8 @@ app.use((req, res, next) => {
 app.use(helmet());
 app.use(limiter);
 app.use(bodyParser.json());
+app.post('/signin', login);
+app.post('/signup', createUser);
 app.use('/', userRouter);
 app.use('/', cardRouter);
 

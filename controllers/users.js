@@ -25,15 +25,14 @@ const createUser = ((req, res) => {
   } = req.body;
 
   bcrypt.hash(password, 10)
-    .then((hash) => {
-      User.create({
-        name, about, avatar, email, hash,
-      });
-    })
-    .then((user) => {
-      checkNotFoundError(user);
-      return res.status(200).send({ data: user });
-    })
+    .then((hash) => User.create({
+      name, about, avatar, email, password: hash,
+    }))
+    .then((user) => res.status(200).send({ data: user }))
+    // .then((user) => {
+    //   // checkNotFoundError(user);
+    //   return res.status(200).send({ data: user });
+    // })
     .catch((err) => handleError(res, err));
 });
 
@@ -62,13 +61,13 @@ const changeAvatar = (req, res) => {
 const login = (req, res) => {
   const { email, password } = req.body;
 
-  User.findUserByCredentials(email, password)
+  return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
 
       res
         .cookie('jwt', token, {
-          maxAge: 3600000 * 24 * 7,
+          maxAge: 3600000,
           httpOnly: true,
         })
         .end();
