@@ -28,15 +28,14 @@ const createUser = ((req, res) => {
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
-    .then((user) => res.status(200).send({ data: user }))
-    // .then((user) => {
-    //   // checkNotFoundError(user);
-    //   return res.status(200).send({ data: user });
-    // })
+    .then((user) => {
+      checkNotFoundError(user);
+      return res.status(200).send({ data: user });
+    })
     .catch((err) => handleError(res, err));
 });
 
-const changeInfo = (req, res) => {
+function changeInfo(req, res) {
   const { name, about } = req.body;
 
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
@@ -45,7 +44,7 @@ const changeInfo = (req, res) => {
       return res.status(200).send({ data: user });
     })
     .catch((err) => handleError(res, err));
-};
+}
 
 const changeAvatar = (req, res) => {
   const { avatar } = req.body;
@@ -70,7 +69,7 @@ const login = (req, res) => {
           maxAge: 3600000,
           httpOnly: true,
         })
-        .end();
+        .send({ message: 'Success' });
     })
     .catch((err) => {
       res
