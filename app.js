@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const { login, createUser } = require('./controllers/users');
-const auth = require('./middlewares/auth');
 
 const app = express();
 
@@ -34,7 +33,7 @@ app.use(limiter);
 app.use(bodyParser.json());
 app.post('/signin', login);
 app.post('/signup', createUser);
-app.use('/', auth, userRouter);
-app.use('/', auth, cardRouter);
+app.use('/', userRouter);
+app.use('/', cardRouter);
 
 app.listen(PORT);
