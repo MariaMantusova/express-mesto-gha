@@ -6,7 +6,6 @@ const auth = require('../middlewares/auth');
 
 router.get('/users', auth, getUsers);
 router.get('/users/me', auth, getCurrentUser);
-
 router.get('/users/:userId', auth, getUserById);
 
 router.patch('/users/me', auth, changeInfo);

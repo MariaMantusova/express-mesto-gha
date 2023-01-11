@@ -6,12 +6,22 @@ const getCards = (req, res) => Card.find({})
   .catch((err) => handleError(res, err));
 
 const deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId, { new: true })
+  const currentUser = req.user._id;
+
+  Card.findById(req.params.cardId)
     .then((card) => {
-      checkNotFoundError(card);
-      return res.send({ data: card });
-    })
-    .catch((err) => handleError(res, err));
+      if (currentUser !== card.owner.toString()) {
+        return res
+          .status(401)
+          .send({ message: 'Вы не можете удалить данную публикацию, так как не являетесь ее автором' });
+      }
+      return Card.findByIdAndRemove(req.params.cardId, { new: true })
+        .then((cards) => {
+          checkNotFoundError(cards);
+          return res.send({ data: cards });
+        })
+        .catch((err) => handleError(res, err));
+    });
 };
 
 const createCard = (req, res) => {
