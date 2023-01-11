@@ -1,5 +1,6 @@
 const express = require('express');
 const rateLimit = require('express-rate-limit');
+const { celebrate, Joi } = require('celebrate');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
@@ -24,8 +25,18 @@ mongoose.connect('mongodb://localhost:27017/mesto');
 app.use(helmet());
 app.use(limiter);
 app.use(bodyParser.json());
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
+  }),
+}), login);
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8),
+  }),
+}), createUser);
 app.use('/', userRouter);
 app.use('/', cardRouter);
 
