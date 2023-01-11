@@ -19,6 +19,13 @@ const getUserById = (req, res) => User.findById(req.params.userId)
   })
   .catch((err) => handleError(res, err));
 
+const getCurrentUser = (req, res) => User.findById(req.user._id)
+  .then((user) => {
+    checkNotFoundError(user);
+    return res.status(200).send({ data: user });
+  })
+  .catch((err) => handleError(res, err));
+
 const createUser = ((req, res) => {
   const {
     name, about, avatar, email, password,
@@ -79,5 +86,5 @@ const login = (req, res) => {
 };
 
 module.exports = {
-  getUsers, getUserById, createUser, changeInfo, changeAvatar, login,
+  getUsers, getUserById, createUser, changeInfo, changeAvatar, login, getCurrentUser,
 };
