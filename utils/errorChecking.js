@@ -1,4 +1,6 @@
+const ExistingEmailError = require('../errors/ExistingEmailError');
 const NotFoundError = require('../errors/NotFoundError');
+const ValidationError = require('../errors/ValidationError');
 
 const checkNotFoundError = (model) => {
   if (model === null) {
@@ -6,17 +8,20 @@ const checkNotFoundError = (model) => {
   }
 };
 
-const handleError = (res, err) => {
-  switch (err.name) {
-    case 'CastError':
-    case 'ValidationError': {
-      return res.status(400).send({ message: 'ValidationError' });
+const handleError = (err) => {
+  switch (true) {
+    case err.name === 'CastError':
+    case err.name === 'ValidationError': {
+      return new ValidationError();
     }
-    case 'NotFoundError': {
-      return res.status(404).send({ message: 'NotFoundError' });
+    case err.name === 'NotFoundError': {
+      return new NotFoundError();
+    }
+    case err.code === 11000: {
+      return ExistingEmailError();
     }
     default: {
-      return res.status(500).send({ message: `Произошла ошибка ${err}` });
+      return err;
     }
   }
 };

@@ -1,30 +1,28 @@
+const ForbiddenError = require('../errors/ForbiddenError');
 const Card = require('../models/card');
-const { checkNotFoundError, handleError } = require('../utils/errorChecking');
+const { checkNotFoundError } = require('../utils/errorChecking');
 
-const getCards = (req, res) => Card.find({})
+const getCards = (req, res, next) => Card.find({})
   .then((cards) => res.status(200).send(cards))
-  .catch((err) => handleError(res, err));
+  .catch(next);
 
-const deleteCard = (req, res) => {
+const deleteCard = (req, res, next) => {
   const currentUser = req.user._id;
 
   Card.findById(req.params.cardId)
     .then((card) => {
+      checkNotFoundError(card);
       if (currentUser !== card.owner.toString()) {
-        return res
-          .status(401)
-          .send({ message: 'Вы не можете удалить данную публикацию, так как не являетесь ее автором' });
+        throw new ForbiddenError();
       }
-      return Card.findByIdAndRemove(req.params.cardId, { new: true })
-        .then((cards) => {
-          checkNotFoundError(cards);
-          return res.send({ data: cards });
-        })
-        .catch((err) => handleError(res, err));
-    });
+      return card;
+    })
+    .then(() => Card.findByIdAndRemove(req.params.cardId, { new: true }))
+    .then((card) => res.send({ data: card }))
+    .catch(next);
 };
 
-const createCard = (req, res) => {
+const createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
 
@@ -33,25 +31,25 @@ const createCard = (req, res) => {
       checkNotFoundError(card);
       return res.send({ data: card });
     })
-    .catch((err) => handleError(res, err));
+    .catch(next);
 };
 
-const likeCard = (req, res) => {
+const likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
     .then((card) => {
       checkNotFoundError(card);
       return res.send(card);
     })
-    .catch((err) => handleError(res, err));
+    .catch(next);
 };
 
-const dislikeCard = (req, res) => {
+const dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
     .then((card) => {
       checkNotFoundError(card);
       return res.send(card);
     })
-    .catch((err) => handleError(res, err));
+    .catch(next);
 };
 
 module.exports = {

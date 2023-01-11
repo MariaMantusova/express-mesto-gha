@@ -14,6 +14,7 @@ const limiter = rateLimit({
 
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
+const { handleError } = require('./utils/errorChecking');
 
 const { PORT = 3000 } = process.env;
 
@@ -27,5 +28,17 @@ app.post('/signin', login);
 app.post('/signup', createUser);
 app.use('/', userRouter);
 app.use('/', cardRouter);
+
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message } = handleError(err);
+
+  res
+    .status(statusCode)
+    .send({
+      message: statusCode === 500
+        ? 'На сервере произошла ошибка'
+        : message,
+    });
+});
 
 app.listen(PORT);
