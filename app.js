@@ -29,6 +29,7 @@ app.post('/signup', createUser);
 app.use('/', userRouter);
 app.use('/', cardRouter);
 
+// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = handleError(err);
 
