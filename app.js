@@ -1,6 +1,6 @@
 const express = require('express');
 const rateLimit = require('express-rate-limit');
-const { celebrate, Joi } = require('celebrate');
+const { celebrate, Joi, errors } = require('celebrate');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
@@ -31,7 +31,7 @@ app.post('/signin', celebrate({
     password: Joi.string().required().min(8),
     name: Joi.string().required().min(2).max(30),
     about: Joi.string().min(2).max(30),
-  }),
+  }).unknown(true),
 }), login);
 app.post('/signup', celebrate({
   body: Joi.object().keys({
@@ -39,10 +39,12 @@ app.post('/signup', celebrate({
     password: Joi.string().required().min(8),
     name: Joi.string().required().min(2).max(30),
     about: Joi.string().min(2).max(30),
-  }),
+  }).unknown(true),
 }), createUser);
 app.use('/', userRouter);
 app.use('/', cardRouter);
+
+app.use(errors());
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
