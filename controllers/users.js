@@ -37,7 +37,13 @@ const createUser = ((req, res, next) => {
     }))
     .then((user) => {
       checkNotFoundError({ user });
-      return res.status(200).send({ data: user });
+      return res.status(200).send(user.toObject({
+        // eslint-disable-next-line no-shadow
+        transform: (doc, res) => {
+          delete res.password;
+          return res;
+        },
+      }));
     })
     .catch(next);
 });
