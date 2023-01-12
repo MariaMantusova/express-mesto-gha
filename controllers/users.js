@@ -36,7 +36,7 @@ const createUser = ((req, res, next) => {
       name, about, avatar, email, password: hash,
     }))
     .then((user) => {
-      checkNotFoundError(user);
+      checkNotFoundError({ user });
       return res.status(200).send({ data: user });
     })
     .catch(next);

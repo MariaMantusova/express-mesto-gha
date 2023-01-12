@@ -18,7 +18,7 @@ const handleError = (err) => {
       return new NotFoundError();
     }
     case err.code === 11000: {
-      return ExistingEmailError();
+      return new ExistingEmailError();
     }
     default: {
       return err;

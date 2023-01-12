@@ -6,6 +6,7 @@ const AuthorizationError = require('../errors/AuthorizationError');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
+
     default: 'Жак-Ив Кусто',
   },
   about: {
@@ -30,9 +31,9 @@ const userSchema = new mongoose.Schema({
     },
   },
   password: {
+    select: false,
     type: String,
     required: true,
-    select: false,
     minlength: 8,
   },
 });
