@@ -82,7 +82,7 @@ const login = (req, res, next) => {
           maxAge: 3600000,
           httpOnly: true,
         })
-        .send({ message: 'Success' });
+        .send({ jwt: token });
     })
     .catch(next);
 };
