@@ -2,6 +2,7 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
+  console.log('f');
   const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
@@ -21,7 +22,7 @@ module.exports = (req, res, next) => {
       .send({ message: 'Необходима авторизация' });
   }
 
-  req.user._id = payload._id;
+  req.user = payload;
 
-  return next;
+  return next();
 };
