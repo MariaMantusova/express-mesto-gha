@@ -23,5 +23,5 @@ module.exports = (req, res, next) => {
 
   req.user._id = payload._id;
 
-  return next();
+  return next;
 };
