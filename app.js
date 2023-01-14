@@ -31,7 +31,7 @@ app.post('/signin', celebrate({
     password: Joi.string().required().min(8),
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().min(2).pattern(/https?:\/\/[a-zA-Z0-9\S]+/),
+    avatar: Joi.string().min(2).pattern(/^https?:\/\/[a-zA-Z0-9\S]+$/),
   }),
 }), login);
 app.post('/signup', celebrate({
@@ -40,7 +40,7 @@ app.post('/signup', celebrate({
     password: Joi.string().required().min(8),
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().min(2).pattern(/https?:\/\/[a-zA-Z0-9\S]+/),
+    avatar: Joi.string().min(2).pattern(/^https?:\/\/[a-zA-Z0-9\S]+$/),
   }),
 }), createUser);
 app.use('/', userRouter);
