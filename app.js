@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const { login, createUser } = require('./controllers/users');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
 
@@ -21,6 +22,8 @@ const { PORT = 3000 } = process.env;
 
 mongoose.set('strictQuery', false);
 mongoose.connect('mongodb://localhost:27017/mesto');
+
+app.use(requestLogger);
 
 app.use(helmet());
 app.use(limiter);
@@ -46,6 +49,7 @@ app.post('/signup', celebrate({
 app.use('/', userRouter);
 app.use('/', cardRouter);
 
+app.use(errorLogger);
 app.use(errors());
 
 // eslint-disable-next-line no-unused-vars
